@@ -122,7 +122,10 @@ const BUSINESS_PAGES = {
 const CSS = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body, #root { height: 100%; }
-  html, body { overflow-x: hidden; max-width: 100vw; }
+  html, body { overflow-x: clip; width: 100%; position: relative; }
+  #root { overflow-x: clip; width: 100%; }
+  img, svg, video { max-width: 100%; }
+  .content > * { min-width: 0; max-width: 100%; }
 
   :root, [data-theme='dark'] {
     color-scheme: dark;
@@ -397,7 +400,7 @@ const CSS = `
   .login-brand img { width: 44px; height: 44px; border-radius: 10px; }
 
   /* ── Mobile ── */
-  .menu-btn { display: none; }
+  .mobile-head { display: none; }
   .bottomnav { display: none; }
   .scrim { display: none; }
   @media (max-width: 900px) {
@@ -408,19 +411,31 @@ const CSS = `
     }
     .sidebar.open { transform: translateX(0); }
     .scrim.show { display: block; position: fixed; inset: 0; z-index: 30; background: rgba(4,4,10,0.55); backdrop-filter: blur(2px); }
+    .mobile-head {
+      display: flex; align-items: center; justify-content: space-between;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      padding: calc(8px + env(safe-area-inset-top)) 14px 8px;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .mh-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .mh-brand img { width: 30px; height: 30px; border-radius: 7px; }
+    .mh-brand .brand-name { font-size: 17px; }
+    .mh-brand .brand-name small { font-size: 8.5px; letter-spacing: 0.22em; margin-top: 1px; }
     .menu-btn {
       display: inline-flex; align-items: center; justify-content: center;
-      position: fixed; top: 12px; left: 12px; z-index: 20;
-      width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+      width: 40px; height: 40px; border-radius: 11px; cursor: pointer;
       border: 1px solid var(--border-2); background: var(--surface);
-      color: var(--text); font-size: 18px;
+      color: var(--text); font-size: 17px; flex-shrink: 0;
     }
-    .header { padding: 64px 18px 4px; }
+    .header { padding: calc(74px + env(safe-area-inset-top)) 18px 4px; }
     .content { padding: 18px 14px calc(88px + env(safe-area-inset-bottom)); }
     .bottomnav {
-      display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+      display: flex; align-items: flex-end; position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
       background: var(--surface); border-top: 1px solid var(--border-2);
       padding: 7px 4px calc(7px + env(safe-area-inset-bottom));
+      overflow: visible;
     }
     .bn-btn {
       flex: 1; border: none; background: transparent; cursor: pointer;
@@ -429,6 +444,17 @@ const CSS = `
     }
     .bn-btn .nav-emoji { font-size: 18px; width: auto; }
     .bn-btn.active { color: var(--accent); }
+    .bn-btn.lift { position: relative; }
+    .bn-btn.lift .bn-circle {
+      display: flex; align-items: center; justify-content: center;
+      width: 52px; height: 52px; border-radius: 50%;
+      margin-top: -26px; margin-bottom: 1px;
+      background: linear-gradient(180deg, #662A9C, #481C7C);
+      border: 3px solid var(--surface);
+      box-shadow: 0 8px 20px rgba(72, 28, 124, 0.5);
+    }
+    .bn-btn.lift .bn-circle .nav-emoji { font-size: 22px; }
+    .bn-btn.lift.active { color: var(--accent); }
   }
 `;
 
@@ -832,7 +858,13 @@ export default function App() {
   return (
     <>
       <style>{CSS}</style>
-      <button className="menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}>{'\u2630'}</button>
+      <div className="mobile-head">
+        <div className="mh-brand">
+          <img src={LOGO} alt="" />
+          <div className="brand-name">Inspire<small>COMMAND CENTER</small></div>
+        </div>
+        <button className="menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}>{'\u2630'}</button>
+      </div>
       <div className={`scrim ${drawer ? 'show' : ''}`} onClick={() => setDrawer(false)} />
       <div className="shell">
         <aside className={`sidebar ${drawer ? 'open' : ''}`}>
@@ -907,9 +939,13 @@ export default function App() {
       <nav className="bottomnav" aria-label="Quick nav">
         {BOTTOM_NAV.map(({ id, label }) => {
           const n = NAV.find((x) => x.id === id);
+          const lift = id === 'command';
           return (
-            <button key={id} className={`bn-btn ${activeParent === id ? 'active' : ''}`} onClick={() => go(id)}>
-              <span className="nav-emoji" aria-hidden="true">{n.emoji}</span>{label}
+            <button key={id} className={`bn-btn ${lift ? 'lift' : ''} ${activeParent === id ? 'active' : ''}`} onClick={() => go(id)}>
+              {lift
+                ? <span className="bn-circle"><span className="nav-emoji" aria-hidden="true">{n.emoji}</span></span>
+                : <span className="nav-emoji" aria-hidden="true">{n.emoji}</span>}
+              {label}
             </button>
           );
         })}
