@@ -16,7 +16,32 @@ const DATA_STORE = {
 };
 const supabase = createClient(DATA_STORE.url, DATA_STORE.anonKey);
 
-const LOGO = 'https://app.sourceonesoftware.com/assets/images/s1-logo-960x960.png';
+const Logo = ({ size = 38 }) => (
+  <svg width={size} height={size} viewBox="0 0 96 96" role="img" aria-label="Inspire" style={{ flexShrink: 0 }}>
+    <defs>
+      <linearGradient id="ilg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#7B2FBE" />
+        <stop offset="0.55" stopColor="#651E82" />
+        <stop offset="1" stopColor="#3B1566" />
+      </linearGradient>
+      <linearGradient id="ispark" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#F3E3FF" />
+        <stop offset="1" stopColor="#C89BF0" />
+      </linearGradient>
+    </defs>
+    <rect x="2" y="2" width="92" height="92" rx="24" fill="url(#ilg)" />
+    <rect x="2" y="2" width="92" height="92" rx="24" fill="none" stroke="rgba(243,227,255,0.25)" strokeWidth="2" />
+    {/* italic "i" stem */}
+    <g transform="skewX(-9)">
+      <rect x="49" y="44" width="15" height="36" rx="7.5" fill="#FFFFFF" />
+    </g>
+    {/* spark dot — the idea */}
+    <path d="M59 10 C61.5 21 66 25.5 77 28 C66 30.5 61.5 35 59 46 C56.5 35 52 30.5 41 28 C52 25.5 56.5 21 59 10 Z" fill="url(#ispark)" />
+    {/* companion spark */}
+    <path d="M33 40 C34.2 45 36.5 47.3 41.5 48.5 C36.5 49.7 34.2 52 33 57 C31.8 52 29.5 49.7 24.5 48.5 C29.5 47.3 31.8 45 33 40 Z" fill="rgba(243,227,255,0.85)" />
+  </svg>
+);
+
 
 // ── Navigation (Suarez-style: emoji + compact, collapsible subs) ──
 
@@ -178,7 +203,6 @@ const CSS = `
     position: sticky; top: 0; height: 100vh; overflow-y: auto;
   }
   .brand { display: flex; align-items: center; gap: 10px; padding: 2px 8px 18px; }
-  .brand img { height: 38px; width: 38px; border-radius: 9px; }
   .brand-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 900; font-style: italic; font-size: 22px;
@@ -397,7 +421,6 @@ const CSS = `
     display: grid; gap: 15px;
   }
   .login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 2px; }
-  .login-brand img { width: 44px; height: 44px; border-radius: 10px; }
 
   /* ── Mobile ── */
   .mobile-head { display: none; }
@@ -405,9 +428,11 @@ const CSS = `
   .scrim { display: none; }
   @media (max-width: 900px) {
     .sidebar {
-      position: fixed; left: 0; top: 0; bottom: 0; z-index: 40; width: 262px;
-      transform: translateX(-105%); transition: transform 220ms ease;
-      box-shadow: 20px 0 50px rgba(0,0,0,0.45);
+      position: fixed; right: 0; left: auto; top: 0; bottom: 0; z-index: 40; width: 262px;
+      transform: translateX(105%); transition: transform 220ms ease;
+      border-right: none; border-left: 1px solid var(--border);
+      box-shadow: -20px 0 50px rgba(0,0,0,0.45);
+      padding-top: calc(20px + env(safe-area-inset-top));
     }
     .sidebar.open { transform: translateX(0); }
     .scrim.show { display: block; position: fixed; inset: 0; z-index: 30; background: rgba(4,4,10,0.55); backdrop-filter: blur(2px); }
@@ -420,7 +445,6 @@ const CSS = `
       border-bottom: 1px solid var(--border);
     }
     .mh-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
-    .mh-brand img { width: 30px; height: 30px; border-radius: 7px; }
     .mh-brand .brand-name { font-size: 17px; }
     .mh-brand .brand-name small { font-size: 8.5px; letter-spacing: 0.22em; margin-top: 1px; }
     .menu-btn {
@@ -529,7 +553,7 @@ function LoginPage() {
     <div className="login-wrap">
       <div className="login-card">
         <div className="login-brand">
-          <img src={LOGO} alt="" />
+          <Logo size={38} />
           <div className="brand-name">Inspire<small>COMMAND CENTER</small></div>
         </div>
         <div className="field"><label htmlFor="email">Email</label>
@@ -860,7 +884,7 @@ export default function App() {
       <style>{CSS}</style>
       <div className="mobile-head">
         <div className="mh-brand">
-          <img src={LOGO} alt="" />
+          <Logo size={30} />
           <div className="brand-name">Inspire<small>COMMAND CENTER</small></div>
         </div>
         <button className="menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}>{'\u2630'}</button>
@@ -869,7 +893,7 @@ export default function App() {
       <div className="shell">
         <aside className={`sidebar ${drawer ? 'open' : ''}`}>
           <div className="brand">
-            <img src={LOGO} alt="" />
+            <Logo size={44} />
             <div className="brand-name">Inspire<small>COMMAND CENTER</small></div>
           </div>
           <nav className="nav" aria-label="Main">
