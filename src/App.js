@@ -19,26 +19,26 @@ const supabase = createClient(DATA_STORE.url, DATA_STORE.anonKey);
 const Logo = ({ size = 38 }) => (
   <svg width={size} height={size} viewBox="0 0 96 96" role="img" aria-label="Inspire" style={{ flexShrink: 0 }}>
     <defs>
-      <linearGradient id="ilg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#7B2FBE" />
-        <stop offset="0.55" stopColor="#651E82" />
-        <stop offset="1" stopColor="#3B1566" />
+      <linearGradient id="itile" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#4A1470" />
+        <stop offset="0.5" stopColor="#2E0B4E" />
+        <stop offset="1" stopColor="#160528" />
       </linearGradient>
-      <linearGradient id="ispark" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#F3E3FF" />
-        <stop offset="1" stopColor="#C89BF0" />
+      <linearGradient id="ibolt" x1="0" y1="0" x2="0.4" y2="1">
+        <stop offset="0" stopColor="#FFFFFF" />
+        <stop offset="1" stopColor="#D9B8F5" />
       </linearGradient>
     </defs>
-    <rect x="2" y="2" width="92" height="92" rx="24" fill="url(#ilg)" />
-    <rect x="2" y="2" width="92" height="92" rx="24" fill="none" stroke="rgba(243,227,255,0.25)" strokeWidth="2" />
-    {/* italic "i" stem */}
-    <g transform="skewX(-9)">
-      <rect x="49" y="44" width="15" height="36" rx="7.5" fill="#FFFFFF" />
-    </g>
-    {/* spark dot — the idea */}
-    <path d="M59 10 C61.5 21 66 25.5 77 28 C66 30.5 61.5 35 59 46 C56.5 35 52 30.5 41 28 C52 25.5 56.5 21 59 10 Z" fill="url(#ispark)" />
-    {/* companion spark */}
-    <path d="M33 40 C34.2 45 36.5 47.3 41.5 48.5 C36.5 49.7 34.2 52 33 57 C31.8 52 29.5 49.7 24.5 48.5 C29.5 47.3 31.8 45 33 40 Z" fill="rgba(243,227,255,0.85)" />
+    {/* MMA octagon tile */}
+    <path d="M27 2 H69 L94 27 V69 L69 94 H27 L2 69 V27 Z" fill="url(#itile)" />
+    <path d="M27 2 H69 L94 27 V69 L69 94 H27 L2 69 V27 Z" fill="none" stroke="#9C5AD8" strokeWidth="2.5" strokeOpacity="0.85" />
+    {/* inner cage line */}
+    <path d="M30.5 10 H65.5 L86 30.5 V65.5 L65.5 86 H30.5 L10 65.5 V30.5 Z" fill="none" stroke="rgba(156,90,216,0.35)" strokeWidth="1.5" />
+    {/* the strike — forward bolt "I" */}
+    <path d="M59 10 L28 55 L44 55 L35 86 L69 41 L52 41 L64 10 Z" fill="url(#ibolt)" />
+    {/* speed notches */}
+    <path d="M18 40 L30 40 L26 46 L14 46 Z" fill="rgba(156,90,216,0.7)" />
+    <path d="M70 56 L82 56 L78 62 L66 62 Z" fill="rgba(156,90,216,0.7)" />
   </svg>
 );
 
